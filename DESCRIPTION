@@ -1,0 +1,27 @@
+Package: YauYauFilter
+Title: YauYau Algorithm for Nonlinear Filtering Problems
+Version: 0.1.0
+Authors@R: 
+    c(person("Yu", "Wang", email = "yuwang@bisma.cn", role = c("aut", "cre")),
+      person("Xueda", "Wei", email = "weixueda@bimsa.cn", role = "aut"),
+      person("Xinrui", "Luo", email = "18804921294@163.com", role = "aut"))
+Description: Implements the YauYau algorithm for solving nonlinear filtering problems. 
+    This package provides efficient numerical methods for filtering and includes an 
+    interactive Shiny application for visualization and exploration.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    Rcpp (>= 1.0.0),
+    RcppArmadillo,
+    RcppEigen,
+    Matrix,
+    Deriv
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+LinkingTo:
+    Rcpp,
+    RcppArmadillo,
+    RcppEigen
