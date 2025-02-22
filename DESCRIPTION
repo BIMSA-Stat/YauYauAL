@@ -18,7 +18,11 @@ Imports:
     RcppEigen,
     Matrix,
     Deriv,
-    shiny
+    shiny,
+    gridExtra,
+    reshape2,
+    shinythemes,
+    ggplot2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
