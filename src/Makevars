@@ -1,8 +1,4 @@
-# 设置C++标准
+# 修改后的 Makevars 文件
 CXX_STD = CXX11
-
-# 编译标志
-PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -I../inst/include
-
-# 链接标志
-PKG_LIBS = $(SHLIB_OPENMP_CFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) $(RCPP_LIBS) $(RCppArmadillo_LIBS)
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -I../inst/include -D_GLIBCXX_USE_CXX11_ABI=1
+PKG_LIBS = $(SHLIB_OPENMP_CFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -lstdc++ -lm
