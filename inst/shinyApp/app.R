@@ -32,7 +32,7 @@ ui <- fluidPage(
       }
     "))
   ),
-  titlePanel("YauYauFilter 0.1.0"),
+  titlePanel("YauYauAL 0.1.0"),
   sidebarLayout(
     sidebarPanel(
       width = 3,
@@ -215,10 +215,10 @@ server <- function(input, output, session) {
             scale_color_manual(name = NULL, values = c("State" = "#0099FF"))
 
           if (!is.null(simData$Iu)) {
-            df_iu <- data.frame(time = 1:nrow(simData$Iu), value = simData$Iu[, idx], type = "YYFilter Iu")
+            df_iu <- data.frame(time = 1:nrow(simData$Iu), value = simData$Iu[, idx], type = "YYAL Iu")
             p <- p +
               geom_line(data = df_iu, aes(x = time, y = value, color = type)) +
-              scale_color_manual(name = NULL, values = c("State" = "#0099FF", "YYFilter Iu" = "#FF3333"))
+              scale_color_manual(name = NULL, values = c("State" = "#0099FF", "YYAL Iu" = "#FF3333"))
           }
           p
         })
@@ -294,10 +294,10 @@ server <- function(input, output, session) {
           scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
           scale_color_manual(name = NULL, values = c("State" = "#0099FF"))
         if (!is.null(simData$Iu)) {
-          df_iu <- data.frame(time = 1:nrow(simData$Iu), value = simData$Iu[, idx], type ="YYFilter Iu")
+          df_iu <- data.frame(time = 1:nrow(simData$Iu), value = simData$Iu[, idx], type ="YYAL Iu")
           p <- p +
             geom_line(data = df_iu, aes(x = time, y = value, color = type)) +
-            scale_color_manual(name = NULL, values = c("State" = "#0099FF", "YYFilter Iu" = "#FF3333"))
+            scale_color_manual(name = NULL, values = c("State" = "#0099FF", "YYAL Iu" = "#FF3333"))
         }
         ggsave(file, plot = p, device = "pdf", width = 8, height = 6)
       } else if (input$mainTab == "Observations") {
