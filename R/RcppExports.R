@@ -42,7 +42,7 @@
 #'
 #' @export
 DST_Solver <- function(Dim, Lambda, B, U, Ns) {
-    .Call(`_YauYauFilter_DST_Solver`, Dim, Lambda, B, U, Ns)
+    .Call(`_YauYauAL_DST_Solver`, Dim, Lambda, B, U, Ns)
 }
 
 #' @name ExpandGrid
@@ -74,7 +74,7 @@ DST_Solver <- function(Dim, Lambda, B, U, Ns) {
 #' print(grid)
 #' @export
 ExpandGrid <- function(Dim, s) {
-    .Call(`_YauYauFilter_ExpandGrid`, Dim, s)
+    .Call(`_YauYauAL_ExpandGrid`, Dim, s)
 }
 
 #' @name NormalizedExp
@@ -121,7 +121,7 @@ ExpandGrid <- function(Dim, s) {
 #'
 #' @export
 NormalizedExp <- function(x) {
-    .Call(`_YauYauFilter_NormalizedExp`, x)
+    .Call(`_YauYauAL_NormalizedExp`, x)
 }
 
 #' @name computeB
@@ -165,7 +165,7 @@ NormalizedExp <- function(x) {
 #'
 #' @export
 computeB <- function(s, D_list, Dt, Ds, f, df, h) {
-    .Call(`_YauYauFilter_computeB`, s, D_list, Dt, Ds, f, df, h)
+    .Call(`_YauYauAL_computeB`, s, D_list, Dt, Ds, f, df, h)
 }
 
 #' @name computeLambda
@@ -203,7 +203,7 @@ computeB <- function(s, D_list, Dt, Ds, f, df, h) {
 #'
 #' @export
 computeLambda <- function(Dim, Ns, Dt, Ds) {
-    .Call(`_YauYauFilter_computeLambda`, Dim, Ns, Dt, Ds)
+    .Call(`_YauYauAL_computeLambda`, Dim, Ns, Dt, Ds)
 }
 
 #' @name generateD
@@ -239,7 +239,7 @@ computeLambda <- function(Dim, Ns, Dt, Ds) {
 #' print(D_list[[1]])
 #' @export
 generateD <- function(Dim, Ns, Ds) {
-    .Call(`_YauYauFilter_generateD`, Dim, Ns, Ds)
+    .Call(`_YauYauAL_generateD`, Dim, Ns, Ds)
 }
 
 #' Simulate State and Observations
@@ -259,6 +259,6 @@ generateD <- function(Dim, Ns, Ds) {
 #' @description This function simulates the evolution of a system over time using the provided dynamics and observation models.
 #' @export
 Simulate_State_Obser <- function(Dt, Ntau, NtNtau, f, h, Dim, seed = NULL) {
-    .Call(`_YauYauFilter_Simulate_State_Obser`, Dt, Ntau, NtNtau, f, h, Dim, seed)
+    .Call(`_YauYauAL_Simulate_State_Obser`, Dt, Ntau, NtNtau, f, h, Dim, seed)
 }
 
