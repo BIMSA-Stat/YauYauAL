@@ -12,5 +12,5 @@ export(generate_derivative)
 export(simulate_wrapper)
 export(wrap_outiu_function)
 importFrom(Deriv,Deriv)
-useDynLib(YauYauFilter, .registration = TRUE)
+useDynLib(YauYauAL, .registration = TRUE)
 
