@@ -5,7 +5,7 @@
 run_app <- function() {
   appDir <- system.file("shinyApp", package = "YauYauFilter")
   if (appDir == "") {
-    stop("Could not find example directory. Try re-installing `YauYauFilter`.", call. = FALSE)
+    stop("Could not find example directory. Try re-installing `YauYauAL`.", call. = FALSE)
   }
   shiny::runApp(appDir, display.mode = "normal")
 }
