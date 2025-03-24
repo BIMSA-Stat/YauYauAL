@@ -14,7 +14,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // DST_Solver
 Eigen::VectorXd DST_Solver(int Dim, const Eigen::VectorXd& Lambda, const Eigen::SparseMatrix<double>& B, const Eigen::VectorXd& U, int Ns);
-RcppExport SEXP _YauYauFilter_DST_Solver(SEXP DimSEXP, SEXP LambdaSEXP, SEXP BSEXP, SEXP USEXP, SEXP NsSEXP) {
+RcppExport SEXP _YauYauAL_DST_Solver(SEXP DimSEXP, SEXP LambdaSEXP, SEXP BSEXP, SEXP USEXP, SEXP NsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,7 +29,7 @@ END_RCPP
 }
 // ExpandGrid
 Rcpp::NumericMatrix ExpandGrid(int Dim, Rcpp::NumericVector s);
-RcppExport SEXP _YauYauFilter_ExpandGrid(SEXP DimSEXP, SEXP sSEXP) {
+RcppExport SEXP _YauYauAL_ExpandGrid(SEXP DimSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,7 +41,7 @@ END_RCPP
 }
 // NormalizedExp
 arma::vec NormalizedExp(const arma::vec& x);
-RcppExport SEXP _YauYauFilter_NormalizedExp(SEXP xSEXP) {
+RcppExport SEXP _YauYauAL_NormalizedExp(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -52,7 +52,7 @@ END_RCPP
 }
 // computeB
 Eigen::SparseMatrix<double> computeB(const Eigen::MatrixXd& s, const std::vector<Eigen::SparseMatrix<double>>& D_list, double Dt, double Ds, Rcpp::Function f, Rcpp::Function df, Rcpp::Function h);
-RcppExport SEXP _YauYauFilter_computeB(SEXP sSEXP, SEXP D_listSEXP, SEXP DtSEXP, SEXP DsSEXP, SEXP fSEXP, SEXP dfSEXP, SEXP hSEXP) {
+RcppExport SEXP _YauYauAL_computeB(SEXP sSEXP, SEXP D_listSEXP, SEXP DtSEXP, SEXP DsSEXP, SEXP fSEXP, SEXP dfSEXP, SEXP hSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -69,7 +69,7 @@ END_RCPP
 }
 // computeLambda
 Eigen::VectorXd computeLambda(int Dim, int Ns, double Dt, double Ds);
-RcppExport SEXP _YauYauFilter_computeLambda(SEXP DimSEXP, SEXP NsSEXP, SEXP DtSEXP, SEXP DsSEXP) {
+RcppExport SEXP _YauYauAL_computeLambda(SEXP DimSEXP, SEXP NsSEXP, SEXP DtSEXP, SEXP DsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -83,7 +83,7 @@ END_RCPP
 }
 // generateD
 std::vector<Eigen::SparseMatrix<double>> generateD(int Dim, int Ns, double Ds);
-RcppExport SEXP _YauYauFilter_generateD(SEXP DimSEXP, SEXP NsSEXP, SEXP DsSEXP) {
+RcppExport SEXP _YauYauAL_generateD(SEXP DimSEXP, SEXP NsSEXP, SEXP DsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -96,7 +96,7 @@ END_RCPP
 }
 // Simulate_State_Obser
 Rcpp::List Simulate_State_Obser(double Dt, int Ntau, int NtNtau, Rcpp::Function f, Rcpp::Function h, int Dim, Rcpp::Nullable<int> seed);
-RcppExport SEXP _YauYauFilter_Simulate_State_Obser(SEXP DtSEXP, SEXP NtauSEXP, SEXP NtNtauSEXP, SEXP fSEXP, SEXP hSEXP, SEXP DimSEXP, SEXP seedSEXP) {
+RcppExport SEXP _YauYauAL_Simulate_State_Obser(SEXP DtSEXP, SEXP NtauSEXP, SEXP NtNtauSEXP, SEXP fSEXP, SEXP hSEXP, SEXP DimSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -113,17 +113,17 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_YauYauFilter_DST_Solver", (DL_FUNC) &_YauYauFilter_DST_Solver, 5},
-    {"_YauYauFilter_ExpandGrid", (DL_FUNC) &_YauYauFilter_ExpandGrid, 2},
-    {"_YauYauFilter_NormalizedExp", (DL_FUNC) &_YauYauFilter_NormalizedExp, 1},
-    {"_YauYauFilter_computeB", (DL_FUNC) &_YauYauFilter_computeB, 7},
-    {"_YauYauFilter_computeLambda", (DL_FUNC) &_YauYauFilter_computeLambda, 4},
-    {"_YauYauFilter_generateD", (DL_FUNC) &_YauYauFilter_generateD, 3},
-    {"_YauYauFilter_Simulate_State_Obser", (DL_FUNC) &_YauYauFilter_Simulate_State_Obser, 7},
+    {"_YauYauAL_DST_Solver", (DL_FUNC) &_YauYauAL_DST_Solver, 5},
+    {"_YauYauAL_ExpandGrid", (DL_FUNC) &_YauYauAL_ExpandGrid, 2},
+    {"_YauYauAL_NormalizedExp", (DL_FUNC) &_YauYauAL_NormalizedExp, 1},
+    {"_YauYauAL_computeB", (DL_FUNC) &_YauYauAL_computeB, 7},
+    {"_YauYauAL_computeLambda", (DL_FUNC) &_YauYauAL_computeLambda, 4},
+    {"_YauYauAL_generateD", (DL_FUNC) &_YauYauAL_generateD, 3},
+    {"_YauYauAL_Simulate_State_Obser", (DL_FUNC) &_YauYauAL_Simulate_State_Obser, 7},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_YauYauFilter(DllInfo *dll) {
+RcppExport void R_init_YauYauAL(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
