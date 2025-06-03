@@ -95,36 +95,36 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-
+  
   # Reactive values to store simulation and Iu estimation results
   simData <- reactiveValues(x = NULL, y = NULL, Iu = NULL)
-
+  
   # Run simulation when "Run Simulation" button is clicked
   observeEvent(input$simulate, {
     Dim   <- input$Dim
     T_val <- input$T
     Dt    <- input$Dt
     Ds    <- input$Ds
-
+    
     # Set Dtau = 5 * Dt
     Dtau    <- 5 * Dt
     Ntau    <- as.integer(T_val / Dtau)
     NtNtau  <- as.integer(T_val / Dt)
-
+    
     # Parse the functions from the text inputs
     f <- eval(parse(text = input$f_expr))
     h <- eval(parse(text = input$h_expr))
     df <- generate_derivative(f)
-
+    
     # Simulate state and observation data
     simResult <- Simulate_State_Obser(Dt, Ntau, NtNtau, f, h, Dim, seed = input$seed)
     simData$x <- simResult$x
     simData$y <- simResult$y
     simData$Iu <- NULL  # Clear previous Iu result
-
+    
     cat("Simulation completed.\n")
   })
-
+  
   # Estimate Iu with progress indicator when "Estimate Iu" is clicked
   observeEvent(input$estimate, {
     req(simData$x, simData$y)
@@ -137,34 +137,34 @@ server <- function(input, output, session) {
       Nt    <- as.integer(Dtau / Dt)
       Ntau_est <- as.integer(T_val / Dtau)
       NtNtau <- as.integer(T_val / Dt)
-
+      
       incProgress(0.1, detail = "Parsing functions")
       f <- eval(parse(text = input$f_expr))
       h <- eval(parse(text = input$h_expr))
       df <- generate_derivative(f)
-
+      
       incProgress(0.2, detail = "Constructing grid")
       x <- simData$x
       # Using global min/max; for different ranges consider per-dimension grids
       s_seq <- seq(min(x), max(x) + Ds, by = Ds)
       Ns <- length(s_seq)
       s_grid <- ExpandGrid(Dim, s_seq)
-
+      
       incProgress(0.3, detail = "Computing matrices")
       D      <- generateD(Dim, Ns, Ds)
       B      <- computeB(s_grid, D, Dt, Ds, f, df, h)
       Lambda <- computeLambda(Dim, Ns, Dt, Ds)
-
+      
       incProgress(0.3, detail = "Computing Iu")
       Iu <- wrap_outiu_function(s_grid, NtNtau, Ntau_est, Nt, Dim, simData$y, h, Lambda, B, Ns, NormalizedExp, DST_Solver)
-
+      
       simData$Iu <- Iu
       incProgress(0.1, detail = "Completed")
     })
-
+    
     cat("Iu estimation completed.\n")
   })
-
+  
   # Dynamically generate the state trajectory tabs (one per dimension)
   output$state_plots <- renderUI({
     req(simData$x)
@@ -174,7 +174,7 @@ server <- function(input, output, session) {
     })
     do.call(tabsetPanel, c(list(id = "statePlots"), tabs))
   })
-
+  
   # Dynamically generate the observation tabs (one per dimension)
   output$obs_plots <- renderUI({
     req(simData$y)
@@ -184,7 +184,7 @@ server <- function(input, output, session) {
     })
     do.call(tabsetPanel, c(list(id = "obsPlots"), tabs))
   })
-
+  
   # Render state trajectory plots
   observe({
     req(simData$x)
@@ -193,7 +193,11 @@ server <- function(input, output, session) {
       local({
         idx <- i
         output[[paste0("state_plot_", idx)]] <- renderPlot({
-          df_state <- data.frame(time = 1:nrow(simData$x), value = simData$x[, idx], type = "State")
+          df_state <- data.frame(
+            time  = seq(0, by = input$Dt, length.out = nrow(simData$x)),
+            value = simData$x[, idx],
+            type  = "State"
+          )
           p <- ggplot() +
             geom_line(data = df_state, aes(x = time, y = value, color = type)) +
             labs(title = paste0("State Trajectory - Dimension ", idx),
@@ -208,14 +212,20 @@ server <- function(input, output, session) {
               legend.direction = "vertical",
               legend.background = element_rect(fill = "white", colour = "gray"),
               legend.box.background = element_rect(fill = "white", colour = "gray"),
-              plot.title = element_text(hjust = 0.5, margin = margin(b = 10)),  # 调整标题边距
+              plot.title = element_text(hjust = 0.5,size = 20, margin = margin(b = 10)),  # 调整标题边距
+              axis.title.x = element_text(size = 16), # 设置x轴标题字体大小
+              axis.title.y = element_text(size = 16), # 设置y轴标题字体大小
               legend.key.size = unit(0.5, "cm")  # 调整图例键大小
             ) +
             scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
             scale_color_manual(name = NULL, values = c("State" = "#0099FF"))
-
+          
           if (!is.null(simData$Iu)) {
-            df_iu <- data.frame(time = 1:nrow(simData$Iu), value = simData$Iu[, idx], type = "YYAL Iu")
+            df_iu <- data.frame(
+              time  = seq(0, by = input$Dt, length.out = nrow(simData$Iu)),
+              value = simData$Iu[, idx],
+              type  = "YYAL Iu"
+            )
             p <- p +
               geom_line(data = df_iu, aes(x = time, y = value, color = type)) +
               scale_color_manual(name = NULL, values = c("State" = "#0099FF", "YYAL Iu" = "#FF3333"))
@@ -225,7 +235,7 @@ server <- function(input, output, session) {
       })
     }
   })
-
+  
   # Render observation plots
   observe({
     req(simData$y)
@@ -234,7 +244,11 @@ server <- function(input, output, session) {
       local({
         idx <- i
         output[[paste0("obs_plot_", idx)]] <- renderPlot({
-          df_obs <- data.frame(time = 1:nrow(simData$y), value = simData$y[, idx], type = "Observation")
+          df_obs <- data.frame(
+            time  = seq(0, by = input$Dt, length.out = nrow(simData$y)),
+            value = simData$y[, idx],
+            type  = "Observation"
+          )
           ggplot(df_obs, aes(x = time, y = value, color = type)) +
             geom_point() +
             labs(title = paste0("Observation - Dimension ", idx),
@@ -258,7 +272,7 @@ server <- function(input, output, session) {
       })
     }
   })
-
+  
   # Download handler to save the current plot as a PDF.
   # It checks which main tab is active ("State Trajectories" or "Observations")
   # and then which inner tab is selected.
@@ -273,7 +287,11 @@ server <- function(input, output, session) {
     content = function(file) {
       if (input$mainTab == "State Trajectories") {
         idx <- as.numeric(input$statePlots)
-        df_state <- data.frame(time = 1:nrow(simData$x), value = simData$x[, idx], type = "State")
+        df_state <- data.frame(
+          time  = seq(0, by = input$Dt, length.out = nrow(simData$x)),
+          value = simData$x[, idx],
+          type  = "State"
+        )
         p <- ggplot() +
           geom_line(data = df_state, aes(x = time, y = value, color = type)) +
           labs(title = paste0("State Trajectory - Dimension ", idx),
@@ -288,13 +306,21 @@ server <- function(input, output, session) {
             legend.direction = "vertical",
             legend.background = element_rect(fill = "white", colour = "gray"),
             legend.box.background = element_rect(fill = "white", colour = "gray"),
-            plot.title = element_text(hjust = 0.5, margin = margin(b = 10)),  # 调整标题边距
+            plot.title = element_text(hjust = 0.5,size = 22, margin = margin(b = 10)),  # 调整标题边距
+            axis.title.x = element_text(size = 20), # 设置x轴标题字体大小
+            axis.title.y = element_text(size = 20), # 设置y轴标题字体大小
+            axis.text.x = element_text(size = 16),  # 设置x轴刻度字体大小
+            axis.text.y = element_text(size = 16),  # 设置y轴刻度字体大小
             legend.key.size = unit(0.5, "cm")  # 调整图例键大小
           ) +
           scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
           scale_color_manual(name = NULL, values = c("State" = "#0099FF"))
         if (!is.null(simData$Iu)) {
-          df_iu <- data.frame(time = 1:nrow(simData$Iu), value = simData$Iu[, idx], type ="YYAL Iu")
+          df_iu <- data.frame(
+            time  = seq(0, by = input$Dt, length.out = nrow(simData$Iu)),
+            value = simData$Iu[, idx],
+            type  = "YYAL Iu"
+          )
           p <- p +
             geom_line(data = df_iu, aes(x = time, y = value, color = type)) +
             scale_color_manual(name = NULL, values = c("State" = "#0099FF", "YYAL Iu" = "#FF3333"))
@@ -302,7 +328,11 @@ server <- function(input, output, session) {
         ggsave(file, plot = p, device = "pdf", width = 8, height = 6)
       } else if (input$mainTab == "Observations") {
         idx <- as.numeric(input$obsPlots)
-        df_obs <- data.frame(time = 1:nrow(simData$y), value = simData$y[, idx], type = "Observation")
+        df_obs <- data.frame(
+          time  = seq(0, by = input$Dt, length.out = nrow(simData$y)),
+          value = simData$y[, idx],
+          type  = "Observation"
+        )
         p <- ggplot(df_obs, aes(x = time, y = value, color = type)) +
           geom_point() +
           labs(title = paste0("Observation - Dimension ", idx),
@@ -317,7 +347,11 @@ server <- function(input, output, session) {
             legend.direction = "vertical",
             legend.background = element_rect(fill = "white", colour = "gray"),
             legend.box.background = element_rect(fill = "white", colour = "gray"),
-            plot.title = element_text(hjust = 0.5, margin = margin(b = 10)),  # 调整标题边距
+            plot.title = element_text(hjust = 0.5,size = 22, margin = margin(b = 10)),  # 调整标题边
+            axis.title.x = element_text(size = 20), # 设置x轴标题字体大小
+            axis.title.y = element_text(size = 20), # 设置y轴标题字体大小
+            axis.text.x = element_text(size = 16),  # 设置x轴刻度字体大小
+            axis.text.y = element_text(size = 16),  # 设置y轴刻度字体大小
             legend.key.size = unit(0.5, "cm")  # 调整图例键大小
           ) +
           scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
